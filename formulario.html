@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Datos del Niño</title>
+
+    <style>
+/* ======== ESTILOS GENERALES ======== */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e3f2fd; /* Azul claro */
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* ======== TÍTULO DESTACADO ======== */
+h2 {
+    background: #2196f3; /* Azul principal */
+    color: #fff;
+    padding: 15px;
+    font-size: 24px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    margin: 20px 0;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ======== FORMULARIO ======== */
+.container {
+    width: 90%;
+    max-width: 800px;
+    background: white;
+    padding: 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* ======== GRUPOS DEL FORMULARIO (CARRUSEL MEJORADO) ======== */
+/* ======== GRUPOS DEL FORMULARIO (CARRUSEL MEJORADO) ======== */
+.form-group {
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: transform 0.8s ease-in-out, opacity 0.4s ease-in-out; /* Separamos transform y opacity */
+}
+
+/* Transición cuando se mueve a la izquierda (saliendo) */
+.form-group.next {
+    transform: translateX(100%);
+    opacity: 0; /* Desvanece el grupo que se está yendo */
+}
+
+/* Transición cuando se mueve a la derecha (saliendo) */
+.form-group.prev {
+    transform: translateX(-100%);
+    opacity: 0; /* Desvanece el grupo que se está yendo */
+}
+
+/* Mostrar el grupo activo con entrada progresiva */
+.form-group.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    position: relative;
+    transition: transform 1s ease-in-out, opacity 0.8s ease-in-out; /* Hacemos la entrada más fluida */
+}
+
+
+/* ======== CAMPOS DEL FORMULARIO ======== */
+fieldset {
+    border: 1px solid #90caf9; /* Azul claro */
+    padding: 15px;
+    border-radius: 8px;
+    text-align: left;
+    width: 100%;
+}
+
+legend {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: left;
+    margin-bottom: 10px;
+    display: block;
+    color: #2196f3;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    margin: 10px 0 5px;
+    color: #333;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* ======== CONTENEDOR DE NAVEGACIÓN (BOTONES Y PROGRESS BAR) ======== */
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+}
+
+/* ======== INDICADOR DE PASOS (PROGRESS BAR) ======== */
+.progress-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.progress-indicator div {
+    width: 14px;
+    height: 14px;
+    background: #ffc107; /* Naranja */
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.progress-indicator div.active {
+    background: #2196f3; /* Azul */
+}
+
+/* ======== BOTONES DE NAVEGACIÓN ======== */
+.buttons {
+    display: flex;
+    justify-content: center; /* Centra los botones */
+    gap: 20px; /* Espacio entre los botones */
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* ======== ESTILO GENERAL DE LOS BOTONES ======== */
+button {
+    background: #2196f3; /* Azul */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    transition: background 0.3s, transform 0.3s ease-in-out; /* Animación de desplazamiento */
+}
+
+/* ======== ANIMACIÓN AL PASAR EL RATÓN ======== */
+#prevBtn:hover {
+    transform: translateX(-10px); /* Mueve el botón ligeramente a la izquierda */
+}
+
+#nextBtn:hover {
+    transform: translateX(10px); /* Mueve el botón ligeramente a la derecha */
+}
+
+/* ======== COLOR AL PASAR EL RATÓN ======== */
+button:hover {
+    background: #ffb065; /* Azul más oscuro */
+}
+
+/* ======== RESPONSIVIDAD PARA MÓVILES ======== */
+@media (max-width: 600px) {
+    h2 {
+        font-size: 20px;
+        padding: 10px;
+    }
+
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    input, textarea, select {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .navigation {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    button {
+        width: 100%;
+        font-size: 14px;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+
+    <h2>Formulario de Registro</h2>
+    <br><br>
+    <div class="progress-indicator">
+        <div class="step active"></div>
+        <div class="step"></div>
+        <div class="step"></div>
+        <div class="step"></div>
+        <div class="step"></div>
+        <div class="step"></div>
+        <div class="step"></div>
+    </div><br><br>
+    
+    <form id="registroForm" action="procesar.php" method="POST" enctype="multipart/form-data">
+
+        <!-- Grupo 1: Información del Padre/Madre/Tutor -->
+        <br>
+        <div class="form-group active" id="grupo1">
+        <fieldset  id="grupo1">
+            <legend>Información del Padre/Madre/Tutor (Máximo 2)</legend>
+            
+            <div id="tutores-container">
+                <div class="tutor">
+                    <label>Nombre y Apellidos:</label>
+                    <input type="text" name="tutor_nombre[]" required>
+                </div>
+            </div>
+            
+            <button type="button" id="agregarTutor">➕ Agregar otro</button>
+
+            <label for="email">Email: *</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="telefono">Teléfono: *</label>
+            <input type="tel" id="telefono" name="telefono" pattern="[0-9]{9,}" required>
+        </fieldset>
+        </div>
+        <!-- Grupo 2: Información del Niño -->
+        <div class="form-group" id="grupo2">
+        <fieldset id="grupo2">
+            <legend>Datos del Niño</legend>
+
+            <label for="nombre_nino">Nombre del Niño: *</label>
+            <input type="text" id="nombre_nino" name="nombre_nino" required>
+
+            <label for="foto">Foto del Niño: *</label>
+            <input type="file" id="foto" name="foto" accept="image/*" required>
+
+            <label for="edad">Edad: *</label>
+            <input type="number" id="edad" name="edad" min="0" required>
+
+            <label for="fecha_nacimiento">Fecha de Nacimiento: *</label>
+            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+
+            <label for="motivo_consulta">Motivo de consulta / Preocupaciones: *</label>
+            <textarea id="motivo_consulta" name="motivo_consulta" required></textarea>
+        </fieldset>
+        </div>
+
+        <!-- Grupo 3: Historia del Embarazo -->
+        <div class="form-group" id="grupo3">
+        <fieldset >
+            <legend>Historia del Embarazo</legend>
+
+            <label for="apgar">Apgar:</label>
+            <input type="text" id="apgar" name="apgar">
+
+            <label for="controles">Controles:</label>
+            <textarea id="controles" name="controles"></textarea>
+
+            <label for="posibles_enfermedades">Posibles Enfermedades:</label>
+            <textarea id="posibles_enfermedades" name="posibles_enfermedades"></textarea>
+
+            <label>Cuidados Durante el Embarazo:</label>
+            <textarea name="cuidados" placeholder="Alimentación, tabaco/alcohol, actividad física, etc."></textarea>
+        </fieldset>
+        </div>
+        <!-- Grupo 4: Historial Médico -->
+        <div class="form-group" id="grupo4">
+        <fieldset >
+            <legend>Historial Médico</legend>
+
+            <label for="percentiles">Percentiles:</label>
+            <input type="text" id="percentiles" name="percentiles">
+
+            <label for="vacunas">Vacunas:</label>
+            <input type="text" id="vacunas" name="vacunas">
+
+            <label for="enfermedades">Enfermedades Previas:</label>
+            <textarea id="enfermedades" name="enfermedades"></textarea>
+
+            <label for="cirugias">Cirugías:</label>
+            <textarea id="cirugias" name="cirugias"></textarea>
+
+            <label for="medicacion">Medicación:</label>
+            <textarea id="medicacion" name="medicacion"></textarea>
+        </fieldset>
+        </div>
+        <!-- Grupo 5: Educación -->
+        <div class="form-group" id="grupo5">
+        <fieldset >
+            <legend>Educación</legend>
+
+            <label for="clases">Clases Particulares:</label>
+            <input type="text" id="clases" name="clases">
+
+            <label for="colegio">Colegio y Curso:</label>
+            <input type="text" id="colegio" name="colegio">
+
+            <label for="asociaciones">Asistencia a Asociaciones:</label>
+            <textarea id="asociaciones" name="asociaciones"></textarea>
+
+            <label for="crianza">Explicación de la Crianza:</label>
+            <textarea id="crianza" name="crianza"></textarea>
+        </fieldset>
+        </div>
+        <!-- Grupo 6: Comunicación y Tecnología -->
+        <div class="form-group" id="grupo6">
+        <fieldset >
+            <legend>Comunicación </legend>
+
+            <label for="manejo_tablet">Manejo de la Tablet/Móvil (1-10):</label>
+            <input type="number" id="manejo_tablet" name="manejo_tablet" min="1" max="10">
+
+            <label for="responde_nombre">¿Responde al Nombre?:</label>
+            <select id="responde_nombre" name="responde_nombre">
+                <option value="">Seleccione</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="descripcion_habla">Descripción Breve del Habla o Problema:</label>
+            <textarea id="descripcion_habla" name="descripcion_habla"></textarea>
+
+            <label for="audio_problema">Subir Audio Explicativo:</label>
+            <input type="file" id="audio_problema" name="audio_problema" accept="audio/*">
+        </fieldset>
+        </div>
+        <!-- Grupo 7: Información Familiar -->
+        <div class="form-group" id="grupo7">
+        <fieldset >
+            <legend>Información Familiar</legend>
+
+            <label for="intereses_familia">Intereses de la Familia:</label>
+            <textarea id="intereses_familia" name="intereses_familia"></textarea>
+
+            <label for="preocupaciones_familia">Preocupaciones de la Familia:</label>
+            <textarea id="preocupaciones_familia" name="preocupaciones_familia"></textarea>
+
+            <label for="ayuda">¿Cómo Crees que te Podemos Ayudar?:</label>
+            <textarea id="ayuda" name="ayuda"></textarea>
+
+            <label for="miedos">Miedos y Ansiedades:</label>
+            <textarea id="miedos" name="miedos"></textarea>
+        </fieldset>
+        </div>
+        <div class="buttons">
+            <button type="button" id="prevBtn">⬅️ Anterior</button>
+            <button type="button" id="nextBtn">Siguiente ➡️</button>
+        </div>
+
+
+        
+    </form>
+    <script>
+                
+                document.addEventListener("DOMContentLoaded", function () {
+                        const formGroups = document.querySelectorAll(".form-group");
+                        const steps = document.querySelectorAll(".progress-indicator .step");
+                        const nextBtn = document.getElementById("nextBtn");
+                        const prevBtn = document.getElementById("prevBtn");
+                        let currentIndex = 0;
+
+                        function showGroup(index, direction) {
+                            formGroups.forEach((group, i) => {
+                                group.classList.remove("active", "next", "prev");
+                                steps[i].classList.remove("active");
+
+                                if (i === index) {
+                                    group.classList.add("active");
+                                    steps[i].classList.add("active");
+                                } else if (i < index) {
+                                    group.classList.add("prev"); // Se mueve a la izquierda si retrocede
+                                } else {
+                                    group.classList.add("next"); // Se mueve a la derecha si avanza
+                                }
+                            });
+
+                            // Ocultar el botón "Anterior" en el primer grupo
+                            prevBtn.style.display = (index === 0) ? "none" : "inline-block";
+
+                            // Cambiar "Siguiente" a "Enviar" en el último grupo
+                            nextBtn.innerText = (index === formGroups.length - 1) ? "Enviar" : "Siguiente ➡️";
+                        }
+
+                        // EVENTO BOTÓN "SIGUIENTE"
+                        nextBtn.addEventListener("click", function () {
+                            if (currentIndex < formGroups.length - 1) {
+                                if (!validarGrupo(currentIndex)) return;
+                                currentIndex++;
+                                showGroup(currentIndex, "next");
+                            } else {
+                                document.getElementById("registroForm").submit();
+                            }
+                        });
+
+                        // EVENTO BOTÓN "ANTERIOR"
+                        prevBtn.addEventListener("click", function () {
+                            if (currentIndex > 0) {
+                                currentIndex--;
+                                showGroup(currentIndex, "prev");
+                            }
+                        });
+
+                        function validarGrupo(index) {
+                            const grupo = formGroups[index];
+                            const inputs = grupo.querySelectorAll("input[required], textarea[required], select[required]");
+
+                            for (let input of inputs) {
+                                if (input.value.trim() === "") {
+                                    alert("Por favor, completa todos los campos obligatorios.");
+                                    return false;
+                                }
+                            }
+                            return true;
+                        }
+
+                        showGroup(currentIndex);
+                    });
+
+
+        // VALIDACION FINAL ANTES DE ENVIAR EL FORMULARIO
+        document.getElementById("registroForm").addEventListener("submit", function(event) {
+            const nombreNino = document.getElementById("nombre_nino").value.trim();
+            const edad = document.getElementById("edad").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const telefono = document.getElementById("telefono").value.trim();
+
+            if (nombreNino === "" || edad === "" || email === "" || telefono === "") {
+                alert("Por favor, complete todos los campos obligatorios.");
+                event.preventDefault(); // Evita que el formulario se envíe
+            }
+        });
+
+
+        // SISTEMA PARA AGREGAR Y ELIMINAR TUTORES (MÁXIMO 2)
+        document.addEventListener("DOMContentLoaded", function () {
+            const tutoresContainer = document.getElementById("tutores-container");
+            const agregarTutorBtn = document.getElementById("agregarTutor");
+
+            agregarTutorBtn.addEventListener("click", function () {
+                // Contamos los elementos actuales con la clase 'tutor'
+                if (document.querySelectorAll(".tutor").length < 2) {
+                    const nuevoTutor = document.createElement("div");
+                    nuevoTutor.classList.add("tutor");
+                    nuevoTutor.innerHTML = `
+                        <label>Nombre y Apellidos:</label>
+                        <input type="text" name="tutor_nombre[]" required>
+                        <button type="button" class="eliminarTutor">❌ Eliminar</button>
+                    `;
+                    tutoresContainer.appendChild(nuevoTutor);
+
+                    // Agregar evento para eliminar el tutor
+                    nuevoTutor.querySelector(".eliminarTutor").addEventListener("click", function () {
+                        nuevoTutor.remove();
+                    });
+
+                } else {
+                    alert("Solo puedes agregar un máximo de dos tutores.");
+                }
+            });
+        });
+
+
+
+    </script>
+
+</body>
+</html>
